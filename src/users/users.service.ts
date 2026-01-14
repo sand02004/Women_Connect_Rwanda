@@ -5,7 +5,6 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import * as bcrypt from 'bcrypt';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
@@ -17,9 +16,9 @@ export class UsersService {
     private readonly userRepository: Repository<User>,
   ) {}
 
-  // 🔹 Create a new user
+  // 🔹 Create a new user (NO password hashing here)
   async create(createUserDto: CreateUserDto) {
-    const { name, email, password } = createUserDto;
+    const { name, email, password, role, isVerified } = createUserDto;
 
     if (!name || !email || !password) {
       throw new BadRequestException('Name, email, and password are required');
@@ -32,19 +31,24 @@ export class UsersService {
       throw new BadRequestException('Email already in use');
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
-
     const user = this.userRepository.create({
       name,
       email,
-      password: hashedPassword,
-      role: 'WOMAN',
-      isVerified: false,
+      password, // already hashed
+      role: role ?? 'WOMAN',
+      isVerified: isVerified ?? false,
     });
 
     await this.userRepository.save(user);
 
-    return { message: 'User registered successfully. Awaiting verification.' };
+    return user;
+  }
+
+  // 🔹 Find user by email (USED BY AUTHSERVICE)
+  async findByEmail(email: string) {
+    return this.userRepository.findOne({
+      where: { email },
+    });
   }
 
   // 🔹 Get all users
