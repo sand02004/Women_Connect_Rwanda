@@ -1,14 +1,7 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
 [![CircleCI](https://dl.circleci.com/status-badge/img/gh/sand02004/Women_Connect_Rwanda/tree/main.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/sand02004/Women_Connect_Rwanda/tree/main)
 
-<!-- [circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest -->
-
 ## Description
-
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+This is NestJs project built with Typescript and PostgreSQL
 
 ## Project setup
 
