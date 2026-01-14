@@ -1,47 +1,77 @@
-import { Injectable, BadRequestException, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  BadRequestException,
+  NotFoundException,
+} from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import * as bcrypt from 'bcrypt';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import * as bcrypt from 'bcrypt';
-
+import { User } from './entities/user.entity';
 
 @Injectable()
 export class UsersService {
-  create(createUserDto: CreateUserDto){
-    const {name, email, password, phone, acceptedTerms} = createUserDto;
-    if (!name || !email || !password)
+  constructor(
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
+  ) {}
+
+  // 🔹 Create a new user
+  async create(createUserDto: CreateUserDto) {
+    const { name, email, password } = createUserDto;
+
+    if (!name || !email || !password) {
       throw new BadRequestException('Name, email, and password are required');
-    if (!acceptedTerms)
-      throw new BadRequestException('You must accept the terms and conditions');
-
-     const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&]{6,}$/;
-    if (!passwordRegex.test(password))
-      throw new BadRequestException(
-        'Password must be at least 6 characters and include letters and numbers',
-      );
-
-       if (phone) {
-      const phoneRegex = /^[0-9]{10,15}$/;
-      if (!phoneRegex.test(phone))
-        throw new BadRequestException('Phone number must be 10-15 digits');
     }
 
-  } {
-    return 'This action adds a new user';
+    const existingUser = await this.userRepository.findOne({
+      where: { email },
+    });
+    if (existingUser) {
+      throw new BadRequestException('Email already in use');
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const user = this.userRepository.create({
+      name,
+      email,
+      password: hashedPassword,
+      role: 'WOMAN',
+      isVerified: false,
+    });
+
+    await this.userRepository.save(user);
+
+    return { message: 'User registered successfully. Awaiting verification.' };
   }
 
+  // 🔹 Get all users
   findAll() {
-    return `This action returns all users`;
+    return this.userRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  // 🔹 Get one user by ID
+  async findOne(id: number) {
+    const user = await this.userRepository.findOne({ where: { id } });
+    if (!user) throw new NotFoundException(`User with id ${id} not found`);
+    return user;
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  // 🔹 Update user info
+  async update(id: number, updateUserDto: UpdateUserDto) {
+    const user = await this.userRepository.preload({
+      id,
+      ...updateUserDto,
+    });
+    if (!user) throw new NotFoundException(`User with id ${id} not found`);
+    return this.userRepository.save(user);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  // 🔹 Remove a user
+  async remove(id: number) {
+    const user = await this.findOne(id);
+    return this.userRepository.remove(user);
   }
 }

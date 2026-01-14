@@ -1,31 +1,36 @@
 // src/users/dto/create-user.dto.ts
 import {
-  IsString,
   IsEmail,
-  IsBoolean,
-  IsOptional,
+  IsNotEmpty,
+  IsString,
   MinLength,
   Matches,
+  IsOptional,
 } from 'class-validator';
 
 export class CreateUserDto {
+  @IsNotEmpty({ message: 'Name is required' })
   @IsString()
   name: string;
 
-  @IsEmail()
+  @IsNotEmpty({ message: 'Email is required' })
+  @IsEmail({}, { message: 'Email must be valid' })
   email: string;
 
+  @IsNotEmpty({ message: 'Password is required' })
   @IsString()
-  @MinLength(6)
+  @MinLength(6, { message: 'Password must be at least 6 characters' })
   @Matches(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&]{6,}$/, {
-    message: 'Password must contain letters and numbers',
+    message: 'Password must include letters and numbers',
   })
   password: string;
 
-  @IsString()
+  // Optional: if you want to allow setting role at registration
   @IsOptional()
-  phone?: string;
+  @IsString()
+  role?: string;
 
-  @IsBoolean()
-  acceptedTerms: boolean;
+  // Optional: usually system sets this, but can allow admin to set it
+  @IsOptional()
+  isVerified?: boolean;
 }
