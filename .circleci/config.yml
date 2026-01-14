@@ -1,0 +1,50 @@
+version: 2.1
+
+executors:
+  node-executor:
+    docker:
+      - image: circleci/node:20   # Node.js version
+      - image: circleci/postgres:15  # PostgreSQL for testing
+    working_directory: ~/repo
+
+jobs:
+  install-deps:
+    executor: node-executor
+    steps:
+      - checkout
+      - run:
+          name: Install dependencies
+          command: npm install
+
+  test:
+    executor: node-executor
+    steps:
+      - checkout
+      - run:
+          name: Wait for PostgreSQL
+          command: |
+            echo "Waiting for Postgres to start..."
+            sleep 10
+      - run:
+          name: Run tests
+          command: npm run test
+
+  build:
+    executor: node-executor
+    steps:
+      - checkout
+      - run:
+          name: Build NestJS Project
+          command: npm run build
+
+workflows:
+  version: 2
+  build_and_test:
+    jobs:
+      - install-deps
+      - test:
+          requires:
+            - install-deps
+      - build:
+          requires:
+            - test
