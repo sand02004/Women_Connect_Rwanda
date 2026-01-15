@@ -6,10 +6,10 @@ import { User } from './entities/user.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([User]), // ✅ Register User repository
+    TypeOrmModule.forFeature([User]), 
   ],
   controllers: [UsersController],
   providers: [UsersService],
-  exports: [UsersService], // ✅ MUST be inside @Module
+  exports: [UsersService], 
 })
 export class UsersModule {}

@@ -7,6 +7,7 @@ import { UsersService } from '../users/users.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import * as bcrypt from 'bcrypt';
+import { Role } from '../enum/role.enum';
 
 @Injectable()
 export class AuthService {
@@ -27,7 +28,7 @@ export class AuthService {
       name,
       email,
       password: hashedPassword,
-      role: 'WOMAN',
+      role: Role.WOMAN, // ✅ FIXED
       isVerified: false,
     });
 
@@ -60,6 +61,7 @@ export class AuthService {
         id: user.id,
         name: user.name,
         email: user.email,
+        role: user.role,
       },
     };
   }

@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from './users/users.module';
-import { ProfileModule } from './profile/profile.module';
+// import { ProfileModule } from './profile/profile.module';
 import { SkillsModule } from './skills/skills.module';
 import { OpportunitiesModule } from './opportunities/opportunities.module';
-import { ApplicationModule } from './application/application.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+//import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -18,13 +18,14 @@ import { AppService } from './app.service';
       password: 'admin123',
       database: 'womenconnectrwanda',
       autoLoadEntities: true,
-      synchronize: true, // dev only
+      synchronize: false,
     }),
     UsersModule,
-    ProfileModule,
+    // ProfileModule,
     SkillsModule,
     OpportunitiesModule,
-    ApplicationModule,
+   
+   // AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

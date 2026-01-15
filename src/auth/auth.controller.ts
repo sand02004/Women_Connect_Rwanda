@@ -6,6 +6,7 @@ import { LoginDto } from './dto/login.dto';
 @ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
+    
   @Post('register')
   @ApiOperation({ summary: 'Register a new user' })
   @ApiBody({ type: RegisterDto })
