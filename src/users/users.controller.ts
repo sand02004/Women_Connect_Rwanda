@@ -9,8 +9,7 @@ import {
   Query,
   UsePipes,
   ValidationPipe,
-  ParseUUIDPipe,
-  UseGuards,
+  ParseUUIDPipe
 } from '@nestjs/common';
 import {
   ApiBearerAuth,

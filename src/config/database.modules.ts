@@ -1,32 +1,26 @@
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { config } from './config';
+import { User } from '../users/entities/user.entity';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      load: [config],
-      isGlobal: true,
-      //   envFilePath:['.']
-    }),
+    ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
-        database: configService.get('DB_NAME'),
-        host: 'localhost',
         type: 'postgres',
-        username: configService.get('DB_USERNAME'),
-        password: configService.get('DB_PASSWORD'),
-        port: configService.get('DB_PORT'),
-        entities: [__dirname + '/../**/*.entity{.ts,.js}'],
+        host: configService.get('DB_HOST') || 'localhost',
+        port: Number(configService.get('DB_PORT')) || 5432,
+        username: configService.get('DB_USERNAME') || 'postgres',
+        password: configService.get('DB_PASSWORD') || 'admin123',
+        database: configService.get('DB_NAME') || 'womenconnectrwanda',
+        entities: [User],
         synchronize: true,
+        logging: true,
       }),
     }),
   ],
 })
-export class DatabaseModule {
-  constructor(private readonly configuration: ConfigService) {}
-  checkDB() {}
-}
+export class DatabaseModule {}

@@ -1,4 +1,3 @@
-// src/users/entities/user.entity.ts
 import {
   Entity,
   Column,
@@ -9,7 +8,7 @@ import {
 } from 'typeorm';
 import { Role } from '../../enum/role.enum';
 
-@Entity()
+@Entity("users")
 export class User {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -29,14 +28,14 @@ export class User {
   @Column({ default: false })
   isVerified: boolean;
 
-  @DeleteDateColumn({ nullable: true })
+  @DeleteDateColumn()
   deletedAt?: Date;
 
   @CreateDateColumn()
-  createdAt: Date;
+  createdAt?: Date;
 
   @UpdateDateColumn()
-  updatedAt: Date;
+  updatedAt?: Date;
 }
 
 // Alias export (this is OK)
