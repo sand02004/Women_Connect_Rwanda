@@ -41,12 +41,12 @@ export class UsersService {
     }
 
     // Only admin can assign roles other than WOMAN
-    let finalRole: UserRole = UserRole.WOMAN;
-    if (role && creatorRole === UserRole.ADMIN) {
-      finalRole = role;
-    } else if (role && creatorRole !== UserRole.ADMIN) {
-      throw new ForbiddenException('Only admins can assign roles');
-    }
+    // let finalRole: UserRole = UserRole.WOMAN;
+    // if (role && creatorRole === UserRole.ADMIN) {
+    //   finalRole = role;
+    // } else if (role && creatorRole !== UserRole.ADMIN) {
+    //   throw new ForbiddenException('Only admins can assign roles');
+    // }
 
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -55,7 +55,7 @@ export class UsersService {
       name,
       email,
       password: hashedPassword,
-      role: finalRole,
+      // role: finalRole,
       isVerified: false,
     });
 

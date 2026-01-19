@@ -1,5 +1,4 @@
-import dotenv from 'dotenv';
-dotenv.config();
+import 'dotenv/config'; // load environment variables from .env
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
@@ -7,20 +6,23 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  const config = new DocumentBuilder()
-  .setVersion('1.0.0')
-  .setTitle('Women Connect Rwanda API')
-  .addTag('User')
-  .addTag('Profiles')
-  .addTag('Opportunities')
-  .build()
+  // ✅ Add a global prefix for all routes
+  app.setGlobalPrefix('api');
 
-  const documentFactory = () => SwaggerModule.createDocument(app, config)
-  SwaggerModule.setup('api', app, documentFactory)
+  const config = new DocumentBuilder()
+    .setVersion('1.0.0')
+    .setTitle('Women Connect Rwanda API')
+    .addTag('User')
+    .addTag('Profiles')
+    .addTag('Opportunities')
+    .build();
+
+  const documentFactory = () => SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api-docs', app, documentFactory); // Swagger at /api-docs
 
   await app.listen(process.env.PORT ?? 3000);
-  const port = process.env.PORT;
-  console.log(`application is running on: http:/localhost:${port}`);
-  console.log(`swagger is running on port: http:localhost:${port}/api`)
+  const port = process.env.PORT ?? 3000;
+  console.log(`application is running on: http://localhost:${port}`);
+  console.log(`swagger is running on port: http://localhost:${port}/api-docs`);
 }
 bootstrap();
