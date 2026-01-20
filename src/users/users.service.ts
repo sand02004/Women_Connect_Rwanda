@@ -12,6 +12,7 @@ import * as bcrypt from 'bcrypt';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User, UserRole } from './entities/user.entity';
+import { Cron, CronExpression } from '@nestjs/schedule';
 
 @Injectable()
 export class UsersService {
@@ -22,7 +23,7 @@ export class UsersService {
     private readonly userRepository: Repository<User>,
   ) {}
 
-  // 🔹 Create a new user
+  //  Create a new user
   async create(
     createUserDto: CreateUserDto,
     creatorRole: UserRole = UserRole.WOMAN,
@@ -40,14 +41,7 @@ export class UsersService {
       throw new BadRequestException('Email already in use');
     }
 
-    // Only admin can assign roles other than WOMAN
-    // let finalRole: UserRole = UserRole.WOMAN;
-    // if (role && creatorRole === UserRole.ADMIN) {
-    //   finalRole = role;
-    // } else if (role && creatorRole !== UserRole.ADMIN) {
-    //   throw new ForbiddenException('Only admins can assign roles');
-    // }
-
+   
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 

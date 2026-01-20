@@ -16,7 +16,7 @@ export class AuthService {
 
   // 🔹 REGISTER a new user
   async register(registerDto: RegisterDto) {
-    const { email, password, name } = registerDto;
+    const { email, password, name, } = registerDto;
 
     const existingUser = await this.usersService.findByEmail(email);
     if (existingUser) {
@@ -25,7 +25,7 @@ export class AuthService {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    await this.usersService.create({
+    const newUser = await this.usersService.create({
       name,
       email,
       password: hashedPassword,
@@ -35,8 +35,8 @@ export class AuthService {
      const loadtoken = { 
       name: name,
       email:email,
-      role:Role,
-      user:user.id
+      role:newUser.role,
+      
      }
     const token = this.jwtService.sign(loadtoken);
 

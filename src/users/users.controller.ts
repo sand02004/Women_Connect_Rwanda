@@ -23,7 +23,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 // import { JwtAuthGuard } from './auth/jwt-auth.guard';
-import { RolesGuard } from '@/src/common/guards/roles.guards';
+import { RolesGuard } from '@/src/auth/guards/roles.guards';
 import { Roles } from '@/src/common/decorators/role.decorator';
 import { Role } from '@/src/enum/role.enum';
 
