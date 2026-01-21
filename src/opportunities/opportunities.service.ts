@@ -15,11 +15,11 @@ export class OpportunitiesService {
   ) {}
 
   // 🔹 Create an opportunity
-  // Converts DTO date string to Date before saving
+
   async createOpportunity(dto: CreateOpportunityDto) {
     const opportunity = this.opportunityRepository.create({
       ...dto,
-      deadline: new Date(dto.deadline), // ✅ Convert string → Date
+      deadline: new Date(dto.deadline),
     });
 
     return this.opportunityRepository.save(opportunity);
